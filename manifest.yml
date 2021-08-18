@@ -1,0 +1,62 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: $PROJ-$ENV
+  namespace: $NAMESPACE
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: $PROJ-$ENV
+  template:
+    metadata:
+      labels:
+        app: $PROJ-$ENV
+    spec:
+      containers:
+      - image: $REG_URL/$IMAGE_NAME:$TAG
+        name: $PROJ-$ENV
+        ports:
+        - containerPort: 8080
+      imagePullSecrets:
+      - name: registry
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: $PROJ-service-$ENV
+  namespace: $NAMESPACE
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    app: $PROJ-$ENV
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: 300m
+    nginx.ingress.kubernetes.io/proxy-read-timeout: 600
+    nginx.ingress.kubernetes.io/proxy-send-timeout: 600
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: 600
+    nginx.ingress.kubernetes.io/upstream-vhost: "$DOMAIN"
+    nginx.ingress.kubernetes.io/configuration-snippet: proxy_set_header Host "$DOMAIN";
+  name: $PROJ-ingress-$ENV
+  namespace: $NAMESPACE
+spec:
+  rules:
+    - host: '$DOMAIN'
+      http:
+        paths:
+          - backend:
+              serviceName: $PROJ-service-$ENV
+              servicePort: 80
+            path: /
+  tls:
+    - secretName: ssl-wildcard

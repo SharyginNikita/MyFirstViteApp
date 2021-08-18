@@ -1,0 +1,60 @@
+{
+    "name": "graphvue",
+    "version": "0.0.0",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "serve": "vite preview",
+        "stylelint": "stylelint ./src/assets/scss/**",
+        "stylelint:fix": "stylelint ./src/assets/scss/** --fix",
+        "lint": "eslint src/**/*.{js,vue}",
+        "lint:fix": "eslint src/**/*.{js,vue} --fix",
+        "prepare": "husky install"
+    },
+    "dependencies": {
+        "@apollo/client": "^3.4.8",
+        "@vue/apollo-option": "^4.0.0-alpha.14",
+        "apexcharts": "^3.27.3",
+        "graphql": "^15.5.1",
+        "graphql-tag": "^2.12.5",
+        "postcss": "^8.3.6",
+        "rollup-plugin-visualizer": "^5.5.2",
+        "vue": "^3.0.5",
+        "vue-router": "4",
+        "vue3-apexcharts": "^1.4.1"
+    },
+    "devDependencies": {
+        "@fullhuman/postcss-purgecss": "^4.0.3",
+        "@vitejs/plugin-vue": "^1.4.0",
+        "@vue/compiler-sfc": "^3.2.3",
+        "cssnano": "^5.0.7",
+        "eslint": "^7.32.0",
+        "eslint-plugin-prettier": "^3.4.0",
+        "eslint-plugin-vue": "^7.16.0",
+        "husky": "^7.0.1",
+        "lint-staged": "^11.1.2",
+        "prettier": "^2.3.2",
+        "sass": "^1.38.0",
+        "stylelint": "^13.13.1",
+        "stylelint-config-prettier": "^8.0.2",
+        "stylelint-config-rational-order": "^0.1.2",
+        "stylelint-config-recommended-scss": "^4.3.0",
+        "stylelint-config-standard": "^22.0.0",
+        "stylelint-order": "^4.1.0",
+        "stylelint-prettier": "^1.2.0",
+        "stylelint-scss": "^3.20.1",
+        "vite": "^2.5.0"
+    },
+    "lint-staged": {
+        "src/**/*.{js,vue}": [
+            "eslint --fix"
+        ],
+        "src/assets/**/*.scss": [
+            "stylelint --fix"
+        ]
+    },
+    "browserslist": [
+        "> 1%",
+        "last 5 versions"
+    ]
+}

@@ -1,0 +1,48 @@
+.inputWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 10px;
+  background: $colorComponentBackground;
+  border: 0.4px solid #d5dde0;
+  border-radius: 12px;
+
+  @media screen and (max-width: $widthPhone) {
+    padding: 0 5px;
+  }
+}
+
+.inputBlock {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font: $fontThin;
+
+  &__label {
+    margin: 0 0 8px;
+    color: $colorLabel;
+    font-size: 11px;
+  }
+
+  &_row {
+    flex-direction: row;
+    align-items: center;
+
+    .inputBlock__label {
+      margin: 0 8px 0 0;
+    }
+  }
+}
+
+.input {
+  width: 100%;
+  padding: 10px;
+  font: $fontThin;
+  background: $colorComponentBackground;
+  border-radius: 12px;
+
+  @media screen and (max-width: $widthPhone) {
+    padding: 5px;
+  }
+}

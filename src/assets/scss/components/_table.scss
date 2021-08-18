@@ -1,0 +1,47 @@
+.table {
+  width: 100%;
+  font: $fontTable;
+
+  @media (max-width: $widthTablet) {
+    font-size: 12px;
+  }
+  @media (max-width: $widthPhone) {
+    font-size: 10px;
+  }
+  &__th {
+    padding: 0 2px 16px;
+
+    @media (max-width: $widthTablet) {
+      text-align: center;
+      vertical-align: middle;
+    }
+  }
+
+  &__td {
+    padding: 8px 2px;
+    vertical-align: middle;
+
+    @media (max-width: $widthTablet) {
+      text-align: center;
+    }
+  }
+  &_log {
+    background-color: $colorComponentBackground;
+    .table__th,
+    .table__td {
+      padding: 15px;
+      color: #3e4958;
+      text-align: center;
+      vertical-align: middle;
+      border: 1px solid #ccc;
+    }
+  }
+  &__thead {
+    margin-bottom: 10px;
+    color: black;
+  }
+
+  &__tr {
+    border-top: 1px solid #e0e0e0;
+  }
+}

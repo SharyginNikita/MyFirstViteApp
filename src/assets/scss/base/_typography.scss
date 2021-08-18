@@ -1,0 +1,21 @@
+.title {
+  display: flex;
+  align-items: center;
+  color: black;
+  font: $fontTitle;
+
+  @media screen and (max-width: $widthPhone) {
+    font-size: 14px;
+  }
+}
+
+.material-icons,
+.material-icons-outlined {
+  color: #000;
+  &_white {
+    color: #fff;
+  }
+  &_gray {
+    color: #636363;
+  }
+}

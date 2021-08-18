@@ -1,0 +1,42 @@
+.button {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 10px;
+  color: $colorBtn;
+  font: $fontButton;
+  background: $colorAccent;
+  border-radius: 4px;
+  box-shadow: 0 3px 16px 0 rgba(255, 255, 255, 0.25);
+  cursor: pointer;
+
+  @media (max-width: $widthPhone) {
+    padding: 8px 5px;
+    font-size: 10px;
+  }
+
+  &_auth {
+    border-radius: 12px;
+  }
+  &_table {
+    justify-content: flex-end;
+    padding: 0;
+    color: $colorAccent;
+    font-size: 12px;
+    text-transform: uppercase;
+    background-color: transparent;
+
+    @media (max-width: $widthPhone) {
+      font-size: 10px;
+    }
+  }
+  &_small {
+    align-self: flex-end;
+    width: auto;
+    padding: 10px 15px;
+
+    @media (max-width: $widthPhone) {
+      padding: 7px;
+    }
+  }
+}

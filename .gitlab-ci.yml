@@ -1,0 +1,102 @@
+variables:
+  PASS: /home/gitlab-runner/pass.txt
+  PROJ: scoliologic-frontend
+  TAG: "latest"
+  NAMESPACE: dev
+  IMAGE_NAME: "$PROJ-$CI_COMMIT_SHORT_SHA"
+  MANIFEST: manifest.yml
+  REGISTRY_PROJ_PATH: $REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME
+
+stages:
+  - build
+  - deploy
+  - cleanup
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# BUILD
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.job_definition: &build
+  stage: build
+  before_script:
+    - cat $PASS | docker login --username=${REG_USR} --password-stdin ${REG_URL}
+    - echo $REGISTRY_PROJ_PATH
+  script:
+    - docker build -t $IMAGE_NAME .
+    - docker tag $IMAGE_NAME $REG_URL/$IMAGE_NAME:$TAG
+    - docker push $REG_URL/$IMAGE_NAME:$TAG
+
+build:master:
+  <<: *build
+  only:
+    - master
+  tags:
+    - k8s-build-master
+
+build:dev:
+  <<: *build
+  only:
+    - dev
+  tags:
+    - k8s-build-master
+
+build:dev-ci-tune:
+  <<: *build
+  only:
+    - dev-ci-tune
+  tags:
+    - k8s-build-master
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# DEPLOY
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.job_definition: &deploy
+  stage: deploy
+  tags:
+    - k8s-deploy-master
+  script:
+    - cat $MANIFEST | envsubst > ./deploy.yaml
+    - cat ./deploy.yaml
+    - kubectl apply -f ./deploy.yaml
+
+deploy:master:
+  <<: *deploy
+  variables:
+    ENV: master
+    DOMAIN: ${PROJ}.k8s.btc-s.ru
+  only:
+    - master
+
+deploy:dev:
+  <<: *deploy
+  variables:
+    ENV: dev
+    DOMAIN: ${PROJ}.dev.k8s.btc-s.ru
+  only:
+    - dev
+
+deploy:dev-ci-tune:
+  <<: *deploy
+  variables:
+    ENV: dev-ci-tune
+    DOMAIN: ${PROJ}.dev-ci-tune.k8s.btc-s.ru
+  only:
+    - dev-ci-tune
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# Cleanup
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+cleanup:
+  stage: cleanup
+  when: manual
+  script:
+    - kubectl delete deployment.apps/$PROJ-$CI_COMMIT_REF_NAME -n $NAMESPACE
+    - kubectl delete service/$PROJ-service-$CI_COMMIT_REF_NAME -n $NAMESPACE
+    - kubectl delete ing $PROJ-ingress-$CI_COMMIT_REF_NAME -n $NAMESPACE
+    - kubectl delete secrets $PROJ-$CI_COMMIT_REF_NAME-tls -n $NAMESPACE
+  only:
+    - dev
+  tags:
+    - k8s-deploy-dev
